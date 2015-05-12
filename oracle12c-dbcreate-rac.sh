@@ -38,6 +38,7 @@ export tnsnamesora=$TNS_ADMIN/tnsnames.ora
 export RACNODES=`$GRID_HOME/bin/onsnodes`  #This gives space-delimited list
 export RACNODES=`echo $RACNODES | sed 's/ /,/g'`  #Change space to comma delimited
 export RACCLUSTERNAME=`$GRID_HOME/bin/cemutlo -n`
+export RACSCANNAME=`srvctl config scan |grep "SCAN name:" | cut -d: -f2 |cut -d, -f1 |sed 's/ //g'`
 
 echo "INFO - Listing environment:"
 env |sort

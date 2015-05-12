@@ -104,6 +104,7 @@ fi
 
 
 # TODO - apply psu
+# TODO - Install additional packages - like Java etc
 # TODO - create a tns entry for DB and its PDBs
 # TODO - verify srvctl configuration
 # TODO - create basic profiles - common/local

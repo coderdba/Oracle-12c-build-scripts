@@ -16,3 +16,7 @@ $GRID_HOME/bin/srvctl config scan
 MODIFY SCAN CONFIGURATION
 http://oracle-base.com/articles/rac/modifying-scan-configuration-rac-11gr2.php
 
+
+PDB-OPEN ALL INSTANCES TO AVOID 1033 ERROR
+http://hey.madjid.net/oracle-rac-12c-pdb-error-ora-01033
+ALTER PLUGGABLE DATABASE ALL OPEN INSTANCES=ALL;

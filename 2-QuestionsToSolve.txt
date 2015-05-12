@@ -1,0 +1,2 @@
+1. How to grant privileges on CDB object to PDB user or PDB
+    Example - how can we have verify-function in CDB level work for PDB - is it possible only through a common profile?

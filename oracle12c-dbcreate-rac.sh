@@ -1,7 +1,10 @@
 #!/bin/ksh
 #
-#
 #  To create Oracle RAC Database
+#
+#  Author: Gowrish Mallipattana
+#
+#  Disclaimer:  Syntax and other errors may exist in this program.  Author not responsible for the actions of this program, good or bad.
 #
 #
 
@@ -10,6 +13,7 @@ export script=$0
 export DBNAME=DB1  #Can be parametrized
 export DBNAME_UNIQUE=DB1_P #Can be derived from DBNAME if standardized
 export PDBNAME=P1
+export ARCHIVELOGMODE=YES
 
 echo "INFO - Starting $script" `date`
 echo
@@ -35,13 +39,39 @@ echo "INFO - Creating Database with DBCA command"
 echo
 dbca -silent -createDatabase -gdbName $DBNAME_UNIQUE -sid $DBNAME -nodelist $RACNODES -databaseType MULTIPURPOSE -characterSet AL32UTF8 -nationalCharacterSet AL16UTF16 -initParams db_name=$DBNAME,db_unique_name=$DBNAME_UNIQUE,blocksize=8192 -templatename General_Purpose.dbc -sysPassword sys123 -systemPassword system123 -createAsContainerDatabase true -numberOfPdbs 1 -pdbName P1 -pdbAdminUserName PDBADMIN -pdbAdminPassword pdbadmin123 -storageType ASM -diskGroupName DATA01 -recoveryGroupName FRA01 -redoLogFileSize 100M -emConfiguration NONE -sampleSchema false 
 
-echo "INFO - Open PDB"
+echo "INFO - Opening the PDB and saving open state"
 sqlplus / as sysdba <<EOF
 whenever sqlerror exit 1
 alter pluggable database $PDBNAME open;
 alter pluggable database $PDBNAME save state;
 EOF
 
+if [$? -ne 0]
+then
+echo "ERR - Error while opening PDB"
+exit 1
+fi
 
+if [$ARCHIVELOGMODE="YES"]
+echo "INFO - Setting archivelog mode"
+
+sqlplus / as sysdba <<EOF
+whenever sqlerror exit 1
+alter database archivelog;
+EOF
+
+	if [$? -ne 0]
+	then
+	echo "ERR - Error while setting archivelog mode"
+	exit 1
+	else
+	echo "INFO - Setting archivelog mode successful"
+	echo
+	fi
+
+else
+echo "INFO - Not setting archivelog mode"
+echo
+fi
 
 

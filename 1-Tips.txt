@@ -20,3 +20,5 @@ http://oracle-base.com/articles/rac/modifying-scan-configuration-rac-11gr2.php
 PDB-OPEN ALL INSTANCES TO AVOID 1033 ERROR
 http://hey.madjid.net/oracle-rac-12c-pdb-error-ora-01033
 ALTER PLUGGABLE DATABASE ALL OPEN INSTANCES=ALL;
+Then check:
+SELECT inst_id,con_id,name,open_mode FROM gv$pdbs ORDER BY con_id,inst_id;

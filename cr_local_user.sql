@@ -9,6 +9,7 @@ alter session set container = PDB1;
 create role perfdba_role;
 
 -- Create users
+-- NOTE - the initial profile will be 'DEFAULT' which is created at the container level already
 create user dbaquery identified by dbaquery ;
 select username, default_tablespace, common from cdb_users where con_id=3 and username ='DBAQUERY';
 alter user dbaquery default tablespace dbats;

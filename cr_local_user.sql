@@ -23,6 +23,9 @@ grant c##common_for_all_role to dbaquery;
 -- Verify roles for the user
 select grantee, granted_role, default_role, common, con_id from cdb_role_privs where grantee='DBAQUERY';
 
+-- Set common profile for this user
+alter user DBAQUERY profile c##common_profile;
+
 
 
 

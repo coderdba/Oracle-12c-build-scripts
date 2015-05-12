@@ -7,6 +7,8 @@
 #  Disclaimer:  Syntax and other errors may exist in this program.  
 #               Author not responsible for the actions of this program, good or bad.
 #
+#  TODO and CHECK:  Search for TODO and CHECK for incomplete sections 
+#
 #  NOTES:
 #  1. Customize password-verify-function as needed in utlpwdmg.sql before running this script
 #
@@ -29,11 +31,12 @@ export ORACLE_BASE=/oracle/db
 export GRID_HOME=/oracle/grid/12.1.0.2
 export GRID_BASE=/oracle/grid
 export TNS_ADMIN=/usr/local/tns
+export PATH=/bin:/usr/bin:/etc:/usr/etc:/usr/local/bin:/usr/lib:/usr/sbin:/usr/ccs/bin:/usr/ucb:/usr/bin/X11:/sbin:$ORACLE_HOME/bin:.
 export oratab=/etc/oratab
 export listenerora=$TNS_ADMIN/listener.ora
 export tnsnamesora=$TNS_ADMIN/tnsnames.ora
-export RACNODES="node1,node2"
-export PATH=/bin:/usr/bin:/etc:/usr/etc:/usr/local/bin:/usr/lib:/usr/sbin:/usr/ccs/bin:/usr/ucb:/usr/bin/X11:/sbin:$ORACLE_HOME/bin:.
+export RACNODES=`$GRID_HOME/bin/onsnodes`  #This gives space-delimited list
+export RACNODES=`echo $RACNODES | sed 's/ /,/g'`  #Change space to comma delimited
 
 echo "INFO - Listing environment:"
 env |sort
@@ -84,6 +87,7 @@ echo "INFO - Not setting archivelog mode"
 echo
 fi
 
+# CHECK - check if verify function should be common or local to PDB
 echo "INFO - Creating Verify Function"
 sqlplus / as sysdba <<EOF
 whenever sqlerror exit 1
@@ -96,10 +100,13 @@ echo "INFO - Error while creating verify function"
 #exit 1  #Probably we dont need to exit, instead, fix later
 fi
 
-# apply psu
-# create basic profiles - common/local
-# create utility users - common/local
-# create additional tablespaces
-# create additional default users
-# create cloud schemas
-# create cloud control table
+
+# TODO - apply psu
+# TODO - create a tns entry for DB and its PDBs
+# TODO - verify srvctl configuration
+# TODO - create basic profiles - common/local
+# TODO - create utility users - common/local
+# TODO - create additional tablespaces
+# TODO - create additional default users
+# TODO - create cloud schemas
+# TODO - create cloud control table

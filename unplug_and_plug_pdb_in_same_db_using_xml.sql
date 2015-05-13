@@ -26,3 +26,14 @@ BEGIN
  DBMS_OUTPUT.PUT_LINE(compatible);
 END;
 /
+
+-- Plug-in the PDB back into the DB
+create pluggable database RL4DB13PD2 
+using '/home/oracle/gowrish/12c/RL4DB13PD2-unplug.xml' 
+nocopy tempfile reuse;
+
+-- List PDBs and their open state
+show pdbs
+
+-- 
+alter pluggable database pdb1 open instances=all;

@@ -11,6 +11,7 @@
 #
 #  NOTES:
 #  1. Customize password-verify-function as needed in utlpwdmg.sql before running this script
+#  
 #
 #--------------------------------------------------------------------------------------------------
 
@@ -56,9 +57,12 @@ fi
 
 echo "INFO - Opening the PDB and saving open state"
 sqlplus / as sysdba <<EOF
-whenever sqlerror exit 1
-alter pluggable database $PDBNAME open;
-alter pluggable database $PDBNAME save state;
+	whenever sqlerror exit 1
+	alter pluggable database $PDBNAME open instances=all;
+	alter pluggable database $PDBNAME save state instances=all;
+	
+	select con_id, name, inst_id, open_mode from gv$pdbs order by 1,2,3;
+
 EOF
 
 if [$? -ne 0]
@@ -106,6 +110,7 @@ echo "INFO - Error while creating verify function"
 fi
 
 
+# TODO - Local password verify function for PDB and assign it to DEFAULT profile of PDB
 # TODO - apply psu
 # TODO - custom init.ora settings
 # TODO - Install additional packages - like Java etc

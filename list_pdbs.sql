@@ -1,6 +1,9 @@
 set pages 100
 column pdb_name format a30
 
+prompt List from show pdbs command
+show pdbs
+
 prompt List from dba_pdbs
 select pdb_id, pdb_name, con_id from dba_pdbs order by 1,3,2;
 

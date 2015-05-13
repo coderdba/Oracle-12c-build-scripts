@@ -10,7 +10,7 @@ alter pluggable database pdb1 close immediate instances=all;
 alter pluggable database pdb1 UNPLUG INTO '/oracle/dumps/pdb1-unplug.xml';
 
 -- Drop the PDB with 'keep datafiles' to retain data to plug-in again
-drop pluggable database RL4DB13PD2 keep datafiles;
+drop pluggable database pdb1 keep datafiles;
 
 -- Check PDB's compatibility with the CDB version
 connect / as sysdba
@@ -28,8 +28,8 @@ END;
 /
 
 -- Plug-in the PDB back into the DB
-create pluggable database RL4DB13PD2 
-using '/home/oracle/gowrish/12c/RL4DB13PD2-unplug.xml' 
+create pluggable database pdb1 
+using '/oracle/dumps/pdb1-unplug.xml' 
 nocopy tempfile reuse;
 
 -- List PDBs and their open state

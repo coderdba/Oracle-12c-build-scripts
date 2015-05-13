@@ -67,6 +67,9 @@ echo "ERR - Error while opening PDB"
 exit 1
 fi
 
+echo "INFO - Listing DB configuration using srvctl config database -d $DBNAME_UNIQUE"
+srvctl config database -d $DBNAME_UNIQUE
+
 if [$ARCHIVELOGMODE="YES"]
 echo "INFO - Setting archivelog mode"
 

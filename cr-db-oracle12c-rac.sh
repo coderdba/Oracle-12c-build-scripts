@@ -104,6 +104,7 @@ fi
 
 
 # TODO - apply psu
+# TODO - custom init.ora settings
 # TODO - Install additional packages - like Java etc
 # TODO - create a tns entry for DB and its PDBs
 # TODO - verify srvctl configuration
@@ -113,3 +114,5 @@ fi
 # TODO - create additional default users
 # TODO - create cloud schemas
 # TODO - create cloud control table
+# TODO - register with RMAN
+# TODO - register with OEM

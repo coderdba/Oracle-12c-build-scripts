@@ -1,4 +1,5 @@
 --
+-- With ASM:  http://en.community.dell.com/techcenter/enterprise-solutions/w/oracle_solutions/6371.how-do-i-plug-a-pdb-to-oracle12c-container-database
 -- http://www.dummies.com/how-to/content/how-to-unplug-and-plug-in-your-pluggable-database-.html
 -- http://oracle-base.com/articles/12c/multitenant-create-and-configure-pluggable-database-12cr1.php#manual-unplug-pdb
 --

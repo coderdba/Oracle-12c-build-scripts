@@ -1,6 +1,9 @@
 set pages 100
 column pdb_name format a30
 
+prompt List from v$containers
+SELECT NAME, CON_ID, DBID, CON_UID, GUID FROM V$CONTAINERS ORDER BY CON_ID;
+
 prompt List from show pdbs command
 show pdbs
 

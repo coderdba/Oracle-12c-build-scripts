@@ -1,5 +1,6 @@
 ORACLE 12C - 
 CONNECTING TO PDB:
+(NOTE - To connect as sys or other elevated local users, use the same methods as below, but use 'as sysdba' where necessary)
 
 Method 1:  
 alter session set container = pdbName;

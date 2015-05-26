@@ -24,5 +24,19 @@ as clone using '/u01/backups/DB1-NonCDB.xml' move;
 3. Nocopy option - uses the files of the source DB itself
 Shutdown the source DB
 create pluggable database DB2
-as clone using '/u01/backups/DB1-NonCDB.xml' nocopy;
+as clone using '/u01/backups/DB1-NonCDB.xml' nocopy tempfile reuse;
+
+CLAUSES (some only)
+
+file_name_convert --> use for non-asm, and also in asm in the case we want to move to another disk group
+standbys_clause --> 
+create_file_dest_clause --> OMF will be used if used already, to override, use this
+AS CLONE --> 
+USING clause -->
+
+STANDBY PDB CREATION
+1. Backup PDB
+2. Create standby at PDB level only
+3. 
+
 

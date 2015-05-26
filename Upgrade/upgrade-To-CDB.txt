@@ -37,6 +37,7 @@ USING clause -->
 STANDBY PDB CREATION
 1. Backup PDB
 2. Create standby at PDB level only
-3. 
+...
+...
 
 

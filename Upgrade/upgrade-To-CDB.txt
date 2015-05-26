@@ -1,4 +1,19 @@
 UPGRADE TO A CDB DATABASE
 
+UPGRADE PRE-12.1 to 12.1
 11g to 12c - upgrade makes it a non-CDB
+11.1.0.7, 11.2.0.2+ AND 10.2.0.5 can be upgraded directly
+1. Run preupgrd.sql in sqlplus 
+2. Run upgrade - perl catctl.pl -n 6 -l $ORACLE_HOME/diagnostics/catupgrd.sql
+
+MIGRATE TO PDB
+Must be same endian format
+Compatible characterset and national characterset
+Same DB options installed
+
+1. Copy
+create pluggable database DB2
+as clone
+using '/u01/backups/DB1-NonCDB.xml'
+copy;
 

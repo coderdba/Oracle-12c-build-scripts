@@ -11,9 +11,9 @@ Must be same endian format
 Compatible characterset and national characterset
 Same DB options installed
 
-1. Copy
+1. Copy option - this will copy files from the source to destination
 create pluggable database DB2
-as clone
-using '/u01/backups/DB1-NonCDB.xml'
-copy;
+as clone using '/u01/backups/DB1-NonCDB.xml' copy;
+
+2. 
 

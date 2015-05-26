@@ -1,0 +1,4 @@
+UPGRADE TO A CDB DATABASE
+
+11g to 12c - upgrade makes it a non-CDB
+

@@ -33,9 +33,14 @@ then
     srvctl remove database -d RL4DB1_TTCE
     
     echo "INFO - Remove standby database in the standby cluster if you dont need it"
+    echo
+    echo ======================================================================
+    echo "INFO - REMOVE ASM FILES FOR THIS DATABASE MANUALLY USING 'ASMCMD' "
+    echo ======================================================================
 else
     echo "ERR - Error during database deletion using dbca"
 fi
+
 
 
 

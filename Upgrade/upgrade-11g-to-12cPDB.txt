@@ -26,5 +26,27 @@ Run the script dbupgdiag.sql to diagnose oracle recommended items
 NOTE: The script needs to be run in SQL*Plus both before the upgrade on the source database and after the upgrade on the upgraded database as SYS user. This will help to determine the status of the database before and after upgrade.
 --> dbupgdiag.sql is in this folder in another sql file
 
+It asks for a '1' - give an existing subdirectory name in the current folder to store its logfile.
+Check logfile for errors, duplicates etc.
+
+Pay attention to duplicates, invalid objects etc.
+For fixing, metalink note 1030426.6
+
+FIX ISSUES
+@$ORACLE_HOME/rdbms/admin/utlrp.sql
+
+RUN PRE-UPGRADE SCRIPT FROM 12C HOME
+
+Run $ORACLE_HOME_12C/rdbms/admin/preupgrd.sql
+After the run, it asks to do the following:
+    1. Review results of the pre-upgrade checks:
+     /u01/app/oracle/cfgtoollogs/DB_UNIQUE_NAME/preupgrade/preupgrade.log
+    
+    2. Execute in the SOURCE environment BEFORE upgrade:
+     /u01/app/oracle/cfgtoollogs/DB_UNIQUE_NAME/preupgrade/preupgrade_fixups.sql
+    
+    3. Execute in the NEW environment AFTER upgrade:
+     /u01/app/oracle/cfgtoollogs/DB_UNIQUE_NAME/preupgrade/postupgrade_fixups.sql
+
 
 

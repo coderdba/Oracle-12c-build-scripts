@@ -119,7 +119,7 @@ sqlplus -s / <<EOF
 @$ORACLE_HOME/rdbms/admin/catbundle.sql psu apply
 EOF
 
-# TODO - create 'common' profiles, users etc
+# Create/alter 'common' profiles, users etc
 sqlplus -s / <<EOF
 show con_name;
 
@@ -127,6 +127,15 @@ show con_name;
 exec dbms_workload_repository.modify_snapshot_settings (interval => 60);
 exec dbms_workload_repository.modify_snapshot_settings (retention => 30*24*60);
 
+-- profile for system/internal users
+create profile c##internal_user_profile limit
+        PASSWORD_LIFE_TIME 90
+        PASSWORD_REUSE_MAX 3
+        FAILED_LOGIN_ATTEMPTS 6
+        PASSWORD_LOCK_TIME .0209
+        PASSWORD_GRACE_TIME 7
+        password_verify_function ORA12C_STRONG_VERIFY_FUNCTION;
+        
 -- generic app user profile will have unlimited life time so that apps do not go down due to password expiry
 create profile c##generic_user_profile limit
   PASSWORD_LIFE_TIME UNLIMITED 
@@ -165,8 +174,39 @@ create profile c##dbsnmp_profile limit
         COMPOSITE_LIMIT UNLIMITED
         IDLE_TIME UNLIMITED
         CONNECT_TIME UNLIMITED;
+        
+--
+--  SET THE RIGHT PROFILE FOR INTERNAL USERS
+--
+alter user SYS profile c##internal_user_profile;
+alter user SYSTEM profile c##internal_user_profile;
+alter user ORDSYS profile c##internal_user_profile;
+alter user DBSNMP profile c##internal_user_profile;
+--- similarly set profile for other internal users also
+---
+---
+
 EOF
 
+# Create/alter local user/profile etc in PDB
+sqlplus '/ as sysdba' <<EOF
+
+alter session set container = $PDB_NAME;
+show con_name;
+
+alter user PDBADMIN profile c##internal_user_profile;
+
+create user oemperfuser identified by PERF#USER99
+default tablespace users temporary tablespace temp profile c##generic_user_profile;
+
+grant select_catalog_role to oemperfuser;
+grant advisor to oemperfuser;
+grant create session to oemperfuser;
+grant oem_monitor to oemperfuser;
+grant wm_admin_role to oemperfuser;
+grant scheduler_admin_role to oemperfuser;
+
+EOF
 
 # TODO - (may not be needed) Local password verify function for PDB and assign it to DEFAULT profile of PDB
 

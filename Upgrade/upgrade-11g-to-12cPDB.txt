@@ -243,6 +243,16 @@ SQL> alter database recover managed standby database using current logfile disco
 UPGRADE PRIMARY
 ---------------
 
+SQL> startup upgrade
+
+Then on unix (Note: -n 6 --> 6 is the parallelism for upgrade actions by catupgrd.sql)
+ cd $ORACLE_HOME/rdbms/admin  (ensure that this goes to the new 12c orcale home)
+ $ORACLE_HOME/perl/bin/perl catctl.pl -n  6 -l $ORACLE_HOME/diagnostics catupgrd.sql
+ 
+Check logs in nohup.out and $ORACLE_HOME/diagnostics directory for error-free execution
+
+
+
 
 
 

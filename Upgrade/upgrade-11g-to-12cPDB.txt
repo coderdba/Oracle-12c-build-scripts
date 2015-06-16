@@ -226,13 +226,14 @@ NOTE: Make sure to perform this on all the nodes.
 
 c.	In all Nodes, Update /etc/oratab file to point to the new home for the corresponding DB NAMEs and the SIDs.
 Eg:-
-RL2DB251:/u02/app/oracle/product/12.1.0.2.RAC/dbs:N
-RL2DB25_TTCE:/u02/app/oracle/product/12.1.0.2.RAC/dbs:N
+INSTANCE_NAME:/u02/app/oracle/product/12.1.0.2.RAC/dbs:N
+DB_UNIQUE_NAME:/u02/app/oracle/product/12.1.0.2.RAC/dbs:N
 
 d.	On node1, Bring up standby in the new home.
-i.	Set ENV Variables. This should now point to new 11.2.0.4 home.
+i.	Set ENV Variables. This should now point to new 12c home.
 . oraenv
-ORACLE_SID = [RL2DB251] ? <SID>
+ORACLE_SID = << INSTANCE NAME>>
+
 ii.	Mount the standby.
 sqlplus / as sysdba
 SQL> startup mount

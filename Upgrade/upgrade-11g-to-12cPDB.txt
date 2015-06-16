@@ -1,7 +1,14 @@
 UPGRADE FROM 11G to 12C PDB RAC
 Complete Checklist for Manual Upgrades to Oracle Database 12c Release 1 (12.1) (Doc ID 1503653.1)
 
-PRE-CHECK
+PRE-CHECKS (multiple steps below are bundled into pre-check.sql in this repository)
+
+Note: The pre-check run from 12c home says EM DB Control (SYSMAN) will be removed during upgrade
+
+CHECK: The 12c home pre-check can be run from its location itself
+CHECK: Check if DB Links work as they were after upgrade and conversion to PDB
+
+DUPLICATES AND INVALIDS
 -- Check duplicate objects between SYS and SYSTEM
 prompt
 prompt Check duplicate objects between SYS and SYSTEM
@@ -47,6 +54,13 @@ After the run, it asks to do the following:
     
     3. Execute in the NEW environment AFTER upgrade:
      /u01/app/oracle/cfgtoollogs/DB_UNIQUE_NAME/preupgrade/postupgrade_fixups.sql
+
+
+CHECK DATAGUARD STATUS
+dgmgrl /
+DGMGRL> show configuration;
+
+This should show a good configuration with no transport/apply lag
 
 
 

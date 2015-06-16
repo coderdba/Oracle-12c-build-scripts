@@ -20,4 +20,7 @@ prompt
 select substr(owner,1,6) owner, substr(object_name,1,30) object, substr(object_type,1,30)
 type, status, LAST_DDL_TIME from dba_objects where status <>'VALID' and owner like 'SYS%';
 
+RUN PRE-UPGRADE DIAGNOSTIC SQL METALINK NOTE 556610.1
+Run the script dbupgdiag.sql to diagnose oracle recommended items
+--> dbupgdiag.sql is in this folder in another sql file
 

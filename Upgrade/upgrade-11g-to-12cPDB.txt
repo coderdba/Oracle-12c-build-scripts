@@ -1,4 +1,5 @@
 UPGRADE FROM 11G to 12C PDB RAC
+Complete Checklist for Manual Upgrades to Oracle Database 12c Release 1 (12.1) (Doc ID 1503653.1)
 
 PRE-CHECK
 -- Check duplicate objects between SYS and SYSTEM
@@ -22,5 +23,8 @@ type, status, LAST_DDL_TIME from dba_objects where status <>'VALID' and owner li
 
 RUN PRE-UPGRADE DIAGNOSTIC SQL METALINK NOTE 556610.1
 Run the script dbupgdiag.sql to diagnose oracle recommended items
+NOTE: The script needs to be run in SQL*Plus both before the upgrade on the source database and after the upgrade on the upgraded database as SYS user. This will help to determine the status of the database before and after upgrade.
 --> dbupgdiag.sql is in this folder in another sql file
+
+
 

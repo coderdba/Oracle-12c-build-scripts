@@ -251,6 +251,10 @@ Then on unix (Note: -n 6 --> 6 is the parallelism for upgrade actions by catupgr
  
 Check logs in nohup.out and $ORACLE_HOME/diagnostics directory for error-free execution
 
+If issues, then rerun catctl.pl after fixing them. ORA-0001 in re-run can be ignored.
+Upon completion, catupgrd0.log should show all is well, components are upgrdaed and status is valid.
+
+
 
 
 

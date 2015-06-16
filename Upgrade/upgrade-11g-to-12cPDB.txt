@@ -271,6 +271,24 @@ Run dbupgdiag.sql with argument ./ (for other invalids)
 FIX
 Run utlrp.sql to fix any invalid objects etc.
 
+MAKE DB CLUSTER DATABASE AGAIN
+alter system set cluster_database=TRUE scope=spfile;
+shutdown immediate;
+
+UPDATE OCR CONFIGURATION
+srvctl upgrade database -d <DB_UNIQUE_NAME> -o <ORACLE_HOME_12C>
+
+STARTUP
+srvctl start database -d <DB_UNIQUE_NAME>
+
+TIMEZONE FILE UPDATE
+If pre upgrade info tool output needed you to update the time zone files, then follow the note 1579838.1  Actions For DST Updates When Upgrading To Or Applying The 11.2.0.4 Patchset
+
+UPDATE ORATAB, INIT and PASSWORD FILES
+Ensure Oratab is updated in all nodes with new oracle home.
+Ensure init.ora and password files are same in all nodes for this DB and its instances.
+
+
 
 
 

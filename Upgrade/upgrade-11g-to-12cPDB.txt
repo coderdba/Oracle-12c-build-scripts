@@ -85,3 +85,19 @@ select * from v$recover_file;
 CHECK IF ANY FILES ARE IN BACKUP MODE
 select * from v$backup where status != 'NOT ACTIVE';
 
+NOTE LOCATION OF FILES
+SELECT name FROM v$controlfile;
+SELECT file_name FROM dba_data_files;
+SELECT group#, member FROM v$logfile;
+
+BACKUP CONFIG FILES
+init.ora, listener.ora, tnsnames.ora
+
+REMOVE DB-CONTROL OF ENTERPRISE MANAGER
+emctl stop dbcontrol
+@$ORACLE_HOME_12C/rdbms/admin/emremove.sql
+
+
+
+
+

@@ -158,19 +158,96 @@ CHECK LABEL SECURITY AND DATABASE VAULT
    - It processes the audit records to minimize downtime.
    - It moves records to an Interim temporary table.
 
-SET CLUSTER DATABASE TO FALSE
+PREPARE PRIMARY:
+---------------
+
+SET CLUSTER DATABASE TO FALSE (only at spfile level now)
 SQL> alter system set cluster_database=FALSE scope=spfile;
 
-CREATE A GUARANTEED RESTORE POINT - BOTH PRIMARY AND STANDBY
-srvctl stop database -d <primay_db_unique_name>
+CREATE A GUARANTEED RESTORE POINT 
+On node1: srvctl stop database -d <primay_db_unique_name>
+On node2 and other nodes: repeat this stop database in the case they have not stopped due to cluster_database=FALSE setting.
+
 SQL> startup mount;
 SQL> CREATE RESTORE POINT before_upgrade_to_12102 GUARANTEE FLASHBACK DATABASE;
 Restore point created.
+
 SQL> select NAME,SCN,TIME,GUARANTEE_FLASHBACK_DATABASE,STORAGE_SIZE from V$RESTORE_POINT;
 SQL> SHUTDOWN IMMEDIATE;
 
-CREATE INIT.ORA FILE
-SQL> create pfile='$ORACLE_HOME/dbs/initDBNAME.ora' from spfile;
+BACKUP INIT.ORA FILE
+SQL> create pfile='$ORACLE_HOME/dbs/initDBNAME.ora.bkp_pre12cUpgrade' from spfile;
+
+CREATE PASSWORD FILE
+orapwd file=orapwDBINSTANCENAME
+
+COPY INIT.ORA AND PASSWORD FILE TO 12C HOME
+cp $ORACLE_HOME/dbs/initDBNAME.ora $ORACLE_HOME_12C/dbs/.
+cp $ORACLE_HOME/dbs/orapwDBINSTANCENAME $ORACLE_HOME_12C/dbs/.
+
+CREATE LINKS IN 12C HOME /network/admin to TNS_ADMIN FILES
+cd $ORACLE_HOME_12C
+ln -s $TNS_ADMIN/listener.ora 
+ln -s $TNS_ADMIN/tnsnames.ora
+ln -s $TNS_ADMIN/sqlnet.ora
+ln -s $TNS_ADMin/ldap.ora
+
+UPDATE ORATAB IN ALL NODES TO POINT TO 12C HOME
+For DB_UNIQUE_NAME and INSTANCE_NAME entries
+
+<< PREPARE STANDBY >>:
+---------------------
+a.	Create guaranteed restore point in mount stage.
+
+Shutdown Database
+	srvctl stop database -d <stby_db_unique_name>
+
+Create Guaranteed Restore point
+	sqlplus / as sysdba
+	SQL> startup mount;
+	
+SQL> CREATE RESTORE POINT before_upgrade_to_12102 GUARANTEE FLASHBACK DATABASE;
+
+Restore point created.
+
+SQL> select NAME,SCN,TIME,GUARANTEE_FLASHBACK_DATABASE,STORAGE_SIZE from V$RESTORE_POINT;
+
+NOTE: Check if the SCN from this view is less than or equal to the Primary Restore Point’s SCN. 
+If not, drop & re-Create a Restore Point from the Primary again.
+
+Stop the Database
+	SQL> SHUTDOWN IMMEDIATE;
+
+b.	Prepare Standby’s  12.1.0.2 ORACLE_HOME 
+i.	Copy  pfile & password file from OLD HOME  to the NEW HOME.
+ii.	Verify the links are present  for .ora file in the 12.1.0.2 ORACLE_HOME.
+
+NOTE: Make sure to perform this on all the nodes.
+
+c.	In all Nodes, Update /etc/oratab file to point to the new home for the corresponding DB NAMEs and the SIDs.
+Eg:-
+RL2DB251:/u02/app/oracle/product/12.1.0.2.RAC/dbs:N
+RL2DB25_TTCE:/u02/app/oracle/product/12.1.0.2.RAC/dbs:N
+
+d.	On node1, Bring up standby in the new home.
+i.	Set ENV Variables. This should now point to new 11.2.0.4 home.
+. oraenv
+ORACLE_SID = [RL2DB251] ? <SID>
+ii.	Mount the standby.
+sqlplus / as sysdba
+SQL> startup mount
+iii.	Start Redo Apply.
+SQL> alter database recover managed standby database using current logfile disconnect from session;
+
+---------------
+UPGRADE PRIMARY
+---------------
+
+
+
+
+
+
 
 
  

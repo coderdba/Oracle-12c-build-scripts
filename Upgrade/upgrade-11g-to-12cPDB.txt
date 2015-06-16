@@ -254,6 +254,26 @@ Check logs in nohup.out and $ORACLE_HOME/diagnostics directory for error-free ex
 If issues, then rerun catctl.pl after fixing them. ORA-0001 in re-run can be ignored.
 Upon completion, catupgrd0.log should show all is well, components are upgrdaed and status is valid.
 
+VERIFY 1
+Startup the database by sqlplus / as sysdba and then startup
+Run $ORACLE_HOME_12C/rdbms/admin/utlu121s.sql
+It reports status of RDBMS and various options in the following file and on screen:
+CATCTL REPORT = /u01/app/oracle/product/12.1.0.2.RAC/cfgtoollogs/DB_UNIQUE_NAME/upgrade/upg_summary.log
+
+VERIFY 2
+Check for existence of string "BEGIN catuppst.sql" in catupgrd0.log.
+If it is missing, then run $ORACLE_HOME_12C/rdbms/admin/catuppst.sql
+
+VERIFY 3
+Run utluiobj.sql (for newly invalid objects)
+Run dbupgdiag.sql with argument ./ (for other invalids)
+
+FIX
+Run utlrp.sql to fix any invalid objects etc.
+
+
+
+
 
 
 

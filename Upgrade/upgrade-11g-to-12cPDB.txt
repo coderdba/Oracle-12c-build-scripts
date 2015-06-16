@@ -97,6 +97,57 @@ REMOVE DB-CONTROL OF ENTERPRISE MANAGER
 emctl stop dbcontrol
 @$ORACLE_HOME_12C/rdbms/admin/emremove.sql
 
+DISABLE/BLACKOUT ALERTS, BACKUPS ETC
+Disable scripts, cron, oem etc that do backups, alerting etc.
+Stop/suspend jobs using DBMS_SCHEDULER, DBMS_JOB etc.
+
+DATA GUARD SETUP
+Disable fast start failover, and configuration
+DGMGRL> DISABLE FAST_START FAILOVER;
+DGMGRL> DISABLE CONFIGURATION;
+
+Connect to both primary & standby and stop the broker.
+sqlplus / as sysdba
+SQL> ALTER SYSTEM SET DG_BROKER_START=FALSE SCOPE=BOTH;
+
+Take backup of broker configuration files in both primary and standby
+    Do this for both config files dg_config_file1.dat  and dg_config_file2.dat
+    Name f/s file to distinguish these between primary and standby
+    SQL> show parameter dg_broker_config_file
+    ASMCMD> cp <ASM file>  <f/s file>
+    
+BACKUP SPFILE
+SQL> create pfile='$ORACLE_HOME/dbs/initDBNAME.ora.preUpgrade' from spfile;
+
+PURGE RECYCLE BIN
+SQL> purge dba_recyclebin;
+
+COLLECT DICTIONARY STATISTICS
+SQL> exec dbms_stats.gather_dictionary_stats;
+
+PURGE PENDING TWO PHASE COMMITS
+SQL> SELECT local_tran_id FROM dba_2pc_pending;
+SQL> EXECUTE dbms_transaction.purge_lost_db_entry('');
+SQL> COMMIT;
+
+ENSURE NO MV-REFRESH IS  IN PROGRESS
+SQL> select s.obj#,o.obj#,s.containerobj#,lastrefreshdate,pflags,xpflags,o.name,o.owner#, bitand(s.mflags, 8) 
+from obj$ o, sum$ s
+where o.obj# = s.obj# and o.type# = 42 AND bitand(s.mflags, 8) = 8;
+Note 1442457.1 : During 11g Upgrade, Mview refresh warning.
+If any active refresh is reported, wait for its completion.
+
+MAKE DEFAULT TABLESPACE OF SYS AND SYSTEM as SYSTEM TABLESPACE
+
+CHECK AND STOP/COMPLETE ANY ACTIVE BACKUPS
+SQL> SELECT * FROM v$backup WHERE status != 'NOT ACTIVE';
+
+
+
+
+
+
+
 
 
 

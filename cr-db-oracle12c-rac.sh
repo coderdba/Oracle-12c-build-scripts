@@ -32,6 +32,7 @@ export ORACLE_BASE=/oracle/db
 export GRID_HOME=/oracle/grid/12.1.0.2
 export GRID_BASE=/oracle/grid
 export TNS_ADMIN=/usr/local/tns
+export TNS_FILE=$TNS_ADMIN/tnsnames.ora
 export PATH=/bin:/usr/bin:/etc:/usr/etc:/usr/local/bin:/usr/lib:/usr/sbin:/usr/ccs/bin:/usr/ucb:/usr/bin/X11:/sbin:$ORACLE_HOME/bin:.
 export oratab=/etc/oratab
 export listenerora=$TNS_ADMIN/listener.ora
@@ -206,13 +207,30 @@ grant oem_monitor to oemperfuser;
 grant wm_admin_role to oemperfuser;
 grant scheduler_admin_role to oemperfuser;
 
+--
+-- create more users as required
+--
+
 EOF
 
 # TODO - (may not be needed) Local password verify function for PDB and assign it to DEFAULT profile of PDB
 
 # TODO - custom init.ora settings
 # TODO - Install additional packages - like Java etc
-# TODO - create a tns entry for DB and its PDBs
+
+# create a tns entry for DB and its PDBs
+# TODO - in this, add steps to find the $scan-name and $pdbServiceName
+echo "
+PDB1 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = $scan-name)(PORT = 1522))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = $pdbServiceName)
+    )
+  )
+" >> $TNS_FILE
+
 # TODO - verify srvctl configuration
 
 # TODO - create utility users - common/local

@@ -96,27 +96,85 @@ echo "INFO - Not setting archivelog mode"
 echo
 fi
 
-# CHECK - check if verify function should be common or local to PDB
-echo "INFO - Creating Verify Function"
-sqlplus / as sysdba <<EOF
-whenever sqlerror exit 1
-@$ORACLE_HOME/rdbms/admin/utlpwdmg.sql
+# NOTE - A verify-function is already created upon db creation.  
+#        NO NEED to run this
+#        This 'common' verify function can be used for local users also
+#echo "INFO - Creating Verify Function"
+#sqlplus / as sysdba <<EOF
+#whenever sqlerror exit 1
+#@$ORACLE_HOME/rdbms/admin/utlpwdmg.sql
+#EOF
+
+#if [$# -ne 0]
+#then
+#echo "INFO - Error while creating verify function"
+##exit 1  #Probably we dont need to exit, instead, fix later
+#fi
+
+# TODO - apply psu
+# Restart the db to clean up any processes
+srvctl stop database -d $DBNAME_UNIQUE 
+srvctl start database -d $DBNAME_UNIQUE
+sqlplus -s / <<EOF
+@$ORACLE_HOME/rdbms/admin/catbundle.sql psu apply
 EOF
 
-if [$# -ne 0]
-then
-echo "INFO - Error while creating verify function"
-#exit 1  #Probably we dont need to exit, instead, fix later
-fi
+# TODO - create 'common' profiles, users etc
+sqlplus -s / <<EOF
+show con_name;
+
+-- Setup AWR settings
+exec dbms_workload_repository.modify_snapshot_settings (interval => 60);
+exec dbms_workload_repository.modify_snapshot_settings (retention => 30*24*60);
+
+-- generic app user profile will have unlimited life time so that apps do not go down due to password expiry
+create profile c##generic_user_profile limit
+  PASSWORD_LIFE_TIME UNLIMITED 
+  PASSWORD_REUSE_MAX 10
+  FAILED_LOGIN_ATTEMPTS 6
+  PASSWORD_LOCK_TIME .0209
+  PASSWORD_GRACE_TIME unlimited
+  password_verify_function ORA12C_STRONG_VERIFY_FUNCTION;
+  
+-- named user profile will have more strict limits - like 90 day password expiry, reuse, failed attempts etc
+create profile c##named_user_profile limit
+  PASSWORD_LIFE_TIME 90
+  PASSWORD_REUSE_MAX 3
+  FAILED_LOGIN_ATTEMPTS 3
+  PASSWORD_LOCK_TIME .0209
+  PASSWORD_GRACE_TIME 7
+  password_verify_function ORA12C_STRONG_VERIFY_FUNCTION;
+
+-- dba user profile is for dba like users with elevated privileges
+create profile c##elevated_user_profile limit
+        PASSWORD_LIFE_TIME 90
+        PASSWORD_REUSE_MAX 3
+        FAILED_LOGIN_ATTEMPTS 3
+        PASSWORD_LOCK_TIME .0209
+        PASSWORD_GRACE_TIME 7
+        password_verify_function ORA12C_STRONG_VERIFY_FUNCTION;
+
+-- DBSNMP profile - for dbsnmp user
+create profile c##dbsnmp_profile limit
+        PASSWORD_LIFE_TIME 90
+        PASSWORD_REUSE_MAX 3
+        FAILED_LOGIN_ATTEMPTS 3
+        PASSWORD_LOCK_TIME .0209
+        PASSWORD_GRACE_TIME 7
+        password_verify_function ORA12C_STRONG_VERIFY_FUNCTION
+        COMPOSITE_LIMIT UNLIMITED
+        IDLE_TIME UNLIMITED
+        CONNECT_TIME UNLIMITED;
+EOF
 
 
-# TODO - Local password verify function for PDB and assign it to DEFAULT profile of PDB
-# TODO - apply psu
+# TODO - (may not be needed) Local password verify function for PDB and assign it to DEFAULT profile of PDB
+
 # TODO - custom init.ora settings
 # TODO - Install additional packages - like Java etc
 # TODO - create a tns entry for DB and its PDBs
 # TODO - verify srvctl configuration
-# TODO - create basic profiles - common/local
+
 # TODO - create utility users - common/local
 # TODO - create additional tablespaces
 # TODO - create additional default users

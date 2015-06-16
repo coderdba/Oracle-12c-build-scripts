@@ -143,8 +143,37 @@ CHECK AND STOP/COMPLETE ANY ACTIVE BACKUPS
 SQL> SELECT * FROM v$backup WHERE status != 'NOT ACTIVE';
 
 REMOVE ANY HIDDEN PARAMETERS AND RESTART DB
+SELECT name, value from SYS.V$PARAMETER WHERE name LIKE '\_%' ESCAPE '\' order by name;
+
+CHECK XDB ACL's HAVE START_DATE AND END_DATE ATTRIBUTES
+SQL> select aclid, start_date, end_date from xds_ace where start_date is not null; 
+If this query returns rows, then follow Note 1958876.1 Upgrade to 12.1 fails with ORA-01830 date format picture ends before converting entire input string ORA-06512: at "SYS.XS_OBJECT_MIGRATION"  to avoid failure in XDB's upgrade.
+
+DROP 12C ROLES AND USERS IF EXIST IN THE 11G DB
+--> see output from pre-upgrade script run earlier
+
+CHECK LABEL SECURITY AND DATABASE VAULT
+@$ORACLE_HOME_12C/rdbms/admin/olspreupgrade.sql
+   - It prepares the move of AUD$ table from SYSTEM to SYS.
+   - It processes the audit records to minimize downtime.
+   - It moves records to an Interim temporary table.
+
+SET CLUSTER DATABASE TO FALSE
+SQL> alter system set cluster_database=FALSE scope=spfile;
+
+CREATE A GUARANTEED RESTORE POINT - BOTH PRIMARY AND STANDBY
+srvctl stop database -d <primay_db_unique_name>
+SQL> startup mount;
+SQL> CREATE RESTORE POINT before_upgrade_to_12102 GUARANTEE FLASHBACK DATABASE;
+Restore point created.
+SQL> select NAME,SCN,TIME,GUARANTEE_FLASHBACK_DATABASE,STORAGE_SIZE from V$RESTORE_POINT;
+SQL> SHUTDOWN IMMEDIATE;
+
+CREATE INIT.ORA FILE
+SQL> create pfile='$ORACLE_HOME/dbs/initDBNAME.ora' from spfile;
 
 
+ 
 
 
 

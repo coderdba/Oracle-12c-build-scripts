@@ -1,0 +1,14 @@
+CONVERT A 12C NON-CDB TO A CDB-PDB DATABASE
+
+This scenario arises when we upgrade a 11g DB in-place to 12c.  
+Then, the upgraded DB will be non-CDB.  
+Oracle is going to deprecate non-CDB in 12c.
+We therefore need to convert non-CDB 12c DB's to CDB with at least one PDB.
+
+LIST DATAFILES IN THE NON-CDB DATABASE
+asmcmd
+ASMCMD> cd +DATA_DG01
+ASMCMD> cd DB_UNIQUE_NAME
+ASMCMD> ls -l
+ASMCMD> 
+

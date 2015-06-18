@@ -10,5 +10,30 @@ asmcmd
 ASMCMD> cd +DATA_DG01
 ASMCMD> cd DB_UNIQUE_NAME
 ASMCMD> ls -l
-ASMCMD> 
+Type           Redund  Striped  Time             Sys  Name
+                                                 Y    CONTROLFILE/
+                                                 Y    DATAFILE/
+                                                 Y    ONLINELOG/
+                                                 Y    PARAMETERFILE/
+                                                 Y    TEMPFILE/
+PARAMETERFILE  UNPROT  COARSE   JUN 17 22:00:00  N    spfileRL4DB20.ora => +DATA_DG01/DB_UNIQUE_NAME/PARAMETERFILE/spfile.293.881900911
+
+ASMCMD> cd DATAFILE
+ASMCMD> ls -l
+Type      Redund  Striped  Time             Sys  Name
+DATAFILE  UNPROT  COARSE   JUN 16 11:00:00  Y    DBIDAT01.256.881900979
+DATAFILE  UNPROT  COARSE   JUN 18 01:00:00  Y    SYSAUX.617.881900599
+DATAFILE  UNPROT  COARSE   JUN 16 11:00:00  Y    SYSTEM.675.881900599
+DATAFILE  UNPROT  COARSE   JUN 16 11:00:00  Y    UNDOTBS1.621.881900599
+DATAFILE  UNPROT  COARSE   JUN 16 22:00:00  Y    UNDOTBS2.555.881900843
+DATAFILE  UNPROT  COARSE   JUN 16 11:00:00  Y    USERS.560.881900601
+
+ASMCMD> cd ../TEMPFILE
+ASMCMD> ls -l
+Type      Redund  Striped  Time             Sys  Name
+TEMPFILE  UNPROT  COARSE   JUN 16 22:00:00  Y    TEMP.554.881900747
+
+
+
+
 

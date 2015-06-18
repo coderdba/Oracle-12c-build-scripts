@@ -1,4 +1,5 @@
 CONVERT A 12C NON-CDB TO A CDB-PDB DATABASE
+http://blog.yannickjaquier.com/oracle/multitenant-standalone-to-pluggable-migration.html
 
 This scenario arises when we upgrade a 11g DB in-place to 12c.  
 Then, the upgraded DB will be non-CDB.  
@@ -33,7 +34,7 @@ ASMCMD> ls -l
 Type      Redund  Striped  Time             Sys  Name
 TEMPFILE  UNPROT  COARSE   JUN 16 22:00:00  Y    TEMP.554.881900747
 
-
+CREATE THE XML FILE
 
 
 

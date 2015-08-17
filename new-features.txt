@@ -1,0 +1,6 @@
+ORACLE 12C NEW FEATUERS
+
+FOR DBA
+http://www.orafaq.com/node/2822
+
+FOR DEVELOPERS

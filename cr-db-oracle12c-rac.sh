@@ -2,8 +2,6 @@
 #---------------------------------------------------------------------------------------------------
 #  To create Oracle RAC Database
 #
-#  Author: Gowrish Mallipattana
-#
 #  Disclaimer:  Syntax and other errors may exist in this program.  
 #               Author not responsible for the actions of this program, good or bad.
 #

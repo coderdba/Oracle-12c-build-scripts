@@ -58,7 +58,7 @@ sqlplus / as sysdba <<EOF
         select con_id, name, inst_id, open_mode from gv$pdbs order by 1,2,3;
 EOF
 
-if [$? -ne 0]
+if [ $? -ne 0 ]
 then
 echo "ERR - Error while opening PDB"
 exit 1
@@ -75,7 +75,7 @@ whenever sqlerror exit 1
 alter database archivelog;
 EOF
 
-        if [$? -ne 0]
+        if [ $? -ne 0 ]
         then
         echo "ERR - Error while setting archivelog mode"
         #exit 1  #Probably we dont need to exit, instead, fix later

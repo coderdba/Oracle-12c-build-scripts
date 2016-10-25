@@ -48,7 +48,7 @@ echo "INFO - Creating Database using DBCA command"
 echo
 dbca -silent -createDatabase -gdbName $DBNAME_UNIQUE -sid $DBNAME -nodelist $RACNODES -databaseType MULTIPURPOSE -characterSet AL32UTF8 -nationalCharacterSet AL16UTF16 -initParams db_name=$DBNAME,db_unique_name=$DBNAME_UNIQUE,db_block_size=8 -templatename General_Purpose.dbc -sysPassword sys123 -systemPassword system123 -createAsContainerDatabase true -numberOfPdbs 1 -pdbName P1 -pdbAdminUserName PDBADMIN -pdbAdminPassword pdbadmin123 -storageType ASM -diskGroupName DATA01 -recoveryGroupName FRA01 -redoLogFileSize 100 -emConfiguration NONE -sampleSchema false 
 
-if [$# -ne 0]
+if [ $# -ne 0 ]
 then
 echo "ERR - Error while creating database using DBCA command"
 exit 1
@@ -64,7 +64,7 @@ sqlplus / as sysdba <<EOF
 
 EOF
 
-if [$? -ne 0]
+if [ $? -ne 0 ]
 then
 echo "ERR - Error while opening PDB"
 exit 1
@@ -81,7 +81,7 @@ whenever sqlerror exit 1
 alter database archivelog;
 EOF
 
-	if [$? -ne 0]
+	if [ $? -ne 0 ]
 	then
 	echo "ERR - Error while setting archivelog mode"
 	#exit 1  #Probably we dont need to exit, instead, fix later

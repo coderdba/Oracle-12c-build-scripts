@@ -27,7 +27,7 @@ srvctl stop database -d $DB_UNIQUE_NAME
 echo "INFO - Removing the database $DB_UNIQUE_NAME"
 dbca -silent -deleteDatabase -sourceDB $DB_UNIQUE_NAME
 
-if [$? -eq 0]
+if [ $? -eq 0 ]
 then
     echo "INFO - Removing database configuration from CRS"
     srvctl remove database -d RL4DB1_TTCE

@@ -30,7 +30,7 @@ dbca -silent -deleteDatabase -sourceDB $DB_UNIQUE_NAME
 if [ $? -eq 0 ]
 then
     echo "INFO - Removing database configuration from CRS"
-    srvctl remove database -d RL4DB1_TTCE
+    srvctl remove database -d DB1_SITE1
     
     echo "INFO - Remove standby database in the standby cluster if you dont need it"
     echo
